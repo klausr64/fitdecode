@@ -62,6 +62,10 @@ class DataProcessorBase:
     .. seealso:: `DefaultDataProcessor`, `StandardUnitsDataProcessor`
     """
 
+    _SEMICIRCLES_ALIAS_LIST = [
+        'semicircles', 'semicircle', 'semicirc', 'semi_circ', 'semi_circles', 'semis'
+    ]
+
     def __init__(self):
         self._method_cache = {}
 
@@ -84,8 +88,13 @@ class DataProcessorBase:
 
     def on_process_unit(self, reader, field_data):
         if field_data.units:
+            if field_data.units in self._SEMICIRCLES_ALIAS_LIST:
+                unit = 'semicircles'
+            else:
+                unit = field_data.units
+
             self._run_processor(
-                f'process_units_{field_data.units}',
+                f'process_units_{unit}',
                 reader, field_data)
 
     def on_process_message(self, reader, data_message):
